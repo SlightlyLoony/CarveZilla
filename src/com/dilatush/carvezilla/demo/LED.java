@@ -115,7 +115,7 @@ public class LED {
 
         public void selectGpioPin( final int _pinNumber ) {
 
-            if( pinNumber < 0 || pinNumber > 6 )
+            if( _pinNumber < 0 || _pinNumber > 6 )
                 throw new IllegalStateException( "Invalid pin number: " + pinNumber );
 
             pinNumber = _pinNumber;
