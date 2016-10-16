@@ -41,8 +41,8 @@ public class LED {
 
 
     /**
-     * This thread implements a pulse-width modulation scheme to control the LED's brightness.  The pulses are begun on 0.04 second intervals (25
-     * pulse per second), and the width is varied from 0 to 0.04 seconds, in 0.0004 second increments.
+     * This thread implements a pulse-width modulation scheme to control the LED's brightness.  The pulses are begun on 0.02 second intervals (50
+     * pulse per second), and the width is varied from 0 to 0.02 seconds, in 0.0002 second increments.
      */
     private class PWM extends Thread {
 
@@ -63,7 +63,7 @@ public class LED {
                     if( on ) {
                         pin.setState( PinState.LOW );
                         on = false;
-                        int tenthou = 400 - lastBrightness * 4;
+                        int tenthou = 200 - lastBrightness * 2;
                         if( tenthou > 0 ) {
                             wait( tenthou );
                         }
@@ -74,8 +74,7 @@ public class LED {
                         on = true;
                         lastBrightness = brightness;
                         if( lastBrightness > 0 ) {
-                            wait( lastBrightness * 4 );
-                            int tenthou = lastBrightness * 4;
+                            wait( lastBrightness * 2 );
                         }
                     }
                 }
@@ -88,7 +87,7 @@ public class LED {
 
         private void wait( final int tenthou ) throws InterruptedException {
             int millis = tenthou / 10;
-            int nanos = tenthou - millis * 10;
+            int nanos = 100000 * (tenthou - millis * 10);
             sleep( millis, nanos );
         }
     }
