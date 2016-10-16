@@ -14,8 +14,11 @@ public class RunLED {
 
         GpioController gpio = GpioFactory.getInstance();
 
-        LED led0 = new LED( gpio, 0 );
-        LED led1 = new LED( gpio, 1 );
+        LED.LEDBuilder builder = new LED.LEDBuilder( gpio );
+        builder.selectGpioPin( 0 );
+        LED led0 = builder.getLED();
+        builder.selectGpioPin( 1 );
+        LED led1 = builder.getLED();
 
         Random random = new Random( System.currentTimeMillis() );
 

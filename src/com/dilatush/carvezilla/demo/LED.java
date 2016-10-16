@@ -12,13 +12,14 @@ public class LED {
     private GpioPinDigitalOutput pin;
     private volatile int brightness;
     private PWM pwm;
+    private TransitionType transitionType;
+    private int transitionTimeMs;
 
-    public LED( final GpioController _gpio, final int _pin ) {
-
-        Pin pinSpec = RaspiPin.getPinByAddress( _pin );
-        pin = _gpio.provisionDigitalOutputPin( pinSpec, PinState.LOW );
-        pin.setShutdownOptions( false, PinState.LOW );
+    private LED( final GpioPinDigitalOutput _pin, final TransitionType _transitionType, final int _transitionTimeMs ) {
+        pin = _pin;
         brightness = 0;
+        transitionTimeMs = _transitionTimeMs;
+        transitionType = _transitionType;
 
         pwm = new PWM();
         pwm.start();
@@ -89,6 +90,59 @@ public class LED {
             int millis = tenthou / 10;
             int nanos = 100000 * (tenthou - millis * 10);
             sleep( millis, nanos );
+        }
+    }
+
+
+    public enum TransitionType { INSTANT, LINEAR, EXPONENTIAL }
+
+
+    public static class LEDBuilder {
+
+        private GpioController gpio;
+        private int pinNumber;
+
+        private GpioPinDigitalOutput pin;
+        private TransitionType transitionType = TransitionType.INSTANT;
+        private int transitionTimeMs = 0;
+
+
+        public LEDBuilder( final GpioController _gpio ) {
+            gpio = _gpio;
+            pinNumber = -1;
+        }
+
+
+        public void selectGpioPin( final int _pinNumber ) {
+
+            if( pinNumber < 0 || pinNumber > 6 )
+                throw new IllegalStateException( "Invalid pin number: " + pinNumber );
+
+            pinNumber = _pinNumber;
+        }
+
+
+        public void setTransitionType( final TransitionType _transitionType ) {
+            transitionType = _transitionType;
+        }
+
+
+        public void setTransitionTimeMs( final int _transitionTimeMs ) {
+
+            if( _transitionTimeMs < 0 || _transitionTimeMs >= 10000 )
+                throw new IllegalStateException( "Invalid transition time (must be 0 to 10,000 ms)" );
+
+            transitionTimeMs = _transitionTimeMs;
+        }
+
+
+        public LED getLED() {
+
+            Pin pinSpec = RaspiPin.getPinByAddress( pinNumber );
+            pin = gpio.provisionDigitalOutputPin( pinSpec, PinState.LOW );
+            pin.setShutdownOptions( false, PinState.LOW );
+
+            return new LED( pin, transitionType, transitionTimeMs );
         }
     }
 }
