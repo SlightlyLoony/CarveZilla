@@ -17,7 +17,7 @@ public class RunLED {
 
         GpioController gpio = GpioFactory.getInstance();
         LED led0 = new VariableLED( gpio, 0 );
-        LED led1 = new ExponentialTransitionLED( gpio, 1, 140 );
+        LED led1 = new ExponentialTransitionLED( gpio, 1, 300 );
 
         Random random = new Random( System.currentTimeMillis() );
         boolean on = false;
