@@ -10,9 +10,9 @@ import com.pi4j.io.gpio.*;
  */
 public class VariableLED implements LED {
 
-    private static final int TICK_MS = 20;
-    private static final int TICK_TEN_THOU = TICK_MS * 10;
-    private static final int TEN_THOU_PER_INC = TICK_TEN_THOU / 100;
+    protected static final int TICK_MS = 20;
+    protected static final int TICK_TEN_THOU = TICK_MS * 10;
+    protected static final int TEN_THOU_PER_INC = TICK_TEN_THOU / 100;
 
     private GpioPinDigitalOutput pin;
     private PWM pwm;
@@ -32,6 +32,11 @@ public class VariableLED implements LED {
     @Override
     public void brightness( final int _percent ) {
         pwm.setBrightness( Math.min( 100, Math.max( 0, _percent ) ) );
+    }
+
+
+    protected int transition( final int _brightness ) {
+        return _brightness;
     }
 
 
@@ -59,6 +64,7 @@ public class VariableLED implements LED {
 
                     // if the LED is currently on...
                     if( pin.getState() == PinState.HIGH ) {
+                        brightness = transition( brightness );
                         pin.setState( PinState.LOW );
                         int tenthou = TICK_TEN_THOU - brightness * TEN_THOU_PER_INC;
                         wait( tenthou );
