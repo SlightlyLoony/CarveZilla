@@ -47,11 +47,13 @@ public class VariableLED implements LED {
     private class PWM extends Thread {
 
         private int brightness;
+        private boolean on;
 
         PWM() {
             setName( "PWM" + pin );
             setDaemon( true );
             brightness = 0;
+            on = false;
         }
 
         @Override
@@ -63,15 +65,19 @@ public class VariableLED implements LED {
                 while( !interrupted() ) {
 
                     // if the LED is currently on...
-                    if( pin.getState() == PinState.HIGH ) {
-                        pin.setState( PinState.LOW );
+                    if( on ) {
+                        on = false;
                         int tenthou = TICK_TEN_THOU - brightness * TEN_THOU_PER_INC;
+                        if( tenthou > 0 )
+                            pin.setState( PinState.LOW );
                         wait( tenthou );
                     }
 
                     else {
                         brightness = transition( brightness );
-                        pin.setState( PinState.HIGH );
+                        on = true;
+                        if( brightness > 0 )
+                            pin.setState( PinState.HIGH );
                         wait( brightness * TEN_THOU_PER_INC );
                     }
                 }
@@ -83,7 +89,6 @@ public class VariableLED implements LED {
 
 
         private void wait( final int _tenthou ) throws InterruptedException {
-            System.out.println( _tenthou );
             if( _tenthou <= 0 )
                 return;
 
