@@ -1,5 +1,7 @@
 package com.dilatush.carvezilla.demo;
 
+import com.dilatush.carvezilla.demo.leds.LED;
+import com.dilatush.carvezilla.demo.leds.VariableLED;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
@@ -13,26 +15,22 @@ public class RunLED {
     public static void main( String[] args ) throws InterruptedException {
 
         GpioController gpio = GpioFactory.getInstance();
-
-        LED.LEDBuilder builder = new LED.LEDBuilder( gpio );
-        builder.selectGpioPin( 0 );
-        LED led0 = builder.getLED();
-        builder.selectGpioPin( 1 );
-        LED led1 = builder.getLED();
+        LED led0 = new VariableLED( gpio, 0 );
+        LED led1 = new VariableLED( gpio, 1 );
 
         Random random = new Random( System.currentTimeMillis() );
 
         while( true ) {
 
-            int wait = 100 + random.nextInt( 190 ) * 10;
+            int wait = 500 + random.nextInt( 150 ) * 10;
             Thread.sleep( wait );
 
             boolean zero = random.nextBoolean();
             int bright = random.nextInt( 101 );
             if( zero )
-                led0.bright( bright );
+                led0.brightness( bright );
             else
-                led1.bright( bright );
+                led1.brightness( bright );
         }
     }
 }
