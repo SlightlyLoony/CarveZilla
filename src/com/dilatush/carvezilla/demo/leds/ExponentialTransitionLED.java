@@ -52,6 +52,8 @@ public class ExponentialTransitionLED extends VariableLED implements LED {
         // otherwise, compute our intermediate brightness...
         transitionTick++;
         int delta = toBrightness - fromBrightness;
-        return (int) Math.round(fromBrightness + delta *  (100 - Math.pow(factor, (transitionTicks - transitionTick))) / 100);
+        int b = (int) Math.round(fromBrightness + delta *  (100 - Math.pow(factor, (transitionTicks - transitionTick))) / 100);
+        System.out.println(b);
+        return b;
     }
 }
