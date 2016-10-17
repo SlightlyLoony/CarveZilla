@@ -64,13 +64,13 @@ public class VariableLED implements LED {
 
                     // if the LED is currently on...
                     if( pin.getState() == PinState.HIGH ) {
-                        brightness = transition( brightness );
                         pin.setState( PinState.LOW );
                         int tenthou = TICK_TEN_THOU - brightness * TEN_THOU_PER_INC;
                         wait( tenthou );
                     }
 
                     else {
+                        brightness = transition( brightness );
                         pin.setState( PinState.HIGH );
                         wait( brightness * TEN_THOU_PER_INC );
                     }
