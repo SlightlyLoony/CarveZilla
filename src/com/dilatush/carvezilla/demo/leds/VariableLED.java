@@ -83,6 +83,7 @@ public class VariableLED implements LED {
 
 
         private void wait( final int _tenthou ) throws InterruptedException {
+            System.out.println( _tenthou );
             if( _tenthou <= 0 )
                 return;
 
