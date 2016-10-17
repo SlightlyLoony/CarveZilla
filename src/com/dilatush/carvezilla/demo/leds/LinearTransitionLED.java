@@ -19,6 +19,8 @@ public class LinearTransitionLED extends VariableLED implements LED {
 
     public LinearTransitionLED( final GpioController _gpio, final int _pinNumber, final int _transitionMs ) {
         super( _gpio, _pinNumber );
+        fromBrightness = 0;
+        toBrightness = 0;
         transitionTicks = _transitionMs / TICK_MS;
         transitionTick = -1;  // show that we're NOT in a transition...
     }
@@ -34,6 +36,10 @@ public class LinearTransitionLED extends VariableLED implements LED {
 
     @Override
     protected int transition( final int _brightness ) {
+
+        // if we're not in a transition, just do nothing...
+        if( transitionTick < 0 )
+            return _brightness;
 
         // if we're done, finish cleanly...
         if( transitionTicks == transitionTick ) {
