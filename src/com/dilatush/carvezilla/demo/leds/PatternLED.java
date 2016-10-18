@@ -28,6 +28,9 @@ public class PatternLED extends VariableLED implements LED {
 
     @Override
     protected int transition( final int _brightness ) {
-        return Math.max( 0, Math.min( 1, (int) Math.round( pattern.brightness() * brightness / 100.0 ) ) );
+        double pt = pattern.brightness();
+        int p = (int) Math.round( pt * brightness );
+        int b = Math.max( 0, Math.min( 100, p ) );
+        return b;
     }
 }

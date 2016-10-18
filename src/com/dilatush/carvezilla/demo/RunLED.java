@@ -14,8 +14,8 @@ public class RunLED {
     public static void main( String[] args ) throws InterruptedException {
 
         GpioController gpio = GpioFactory.getInstance();
-        LED led0 = new PatternLED( gpio, 0, new HalfWavePattern( 2000 ) );
-        LED led1 = new ExponentialTransitionLED( gpio, 1, 300 );
+        LED led0 = new PatternLED( gpio, 0, new HalfWavePattern( 500 ) );
+        LED led1 = new PatternLED( gpio, 1, new TrianglePattern( 500 ) );
 
         Random random = new Random( System.currentTimeMillis() );
         boolean on = false;
@@ -25,7 +25,7 @@ public class RunLED {
             Thread.sleep( 1000 );
 
             led0.brightness( 100 );
-            led1.brightness( on ? 0 : 100 );
+            led1.brightness( 100 );
             on = !on;
         }
     }
