@@ -76,7 +76,7 @@ public class VariableLED implements LED {
                     else {
                         brightness = transition( brightness );
                         on = true;
-                        if( brightness > 0 )
+                        if( brightness > 5 )  // we ignore the lowest brightnesses, as they are relatively unstable and don't look good...
                             pin.setState( PinState.HIGH );
                         wait( brightness * TEN_THOU_PER_INC );
                     }
